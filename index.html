@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <link
+      href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+    <script src="https://unpkg.com/amazon-location-helpers@1.1"></script>
+    <script>
+      async function initializeApp() {
+        const map = await AmazonLocation.createMap(
+          {
+            identityPoolId: "YOUR_COGNITO_IDENTITY_POOL",
+          },
+          {
+            container: "map",
+            center: [-114.07, 51.0553],
+            zoom: 16,
+            style: "OpenDataMap",
+          }
+        );
+
+        map.addControl(new maplibregl.NavigationControl(), "top-right");
+
+        const popup = new maplibregl.Popup({ offset: 35 }).setHTML(
+          `<h3>Prince's Island Park</h3>
+           <img width="200" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Calgary1-Szmurlo.jpg/320px-Calgary1-Szmurlo.jpg" />`
+        );
+
+        const marker = new maplibregl.Marker()
+          .setLngLat([-114.07, 51.0553])
+          .setPopup(popup)
+          .addTo(map);
+      }
+
+      initializeApp();
+    </script>
+  </body>
+</html>

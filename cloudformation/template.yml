@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A Template to provision Amazon Location Service Resources for the demo
+Resources:
+  OpenDataMap:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorOpenDataStandardLight
+      Description: Map Resource created for the demo
+      MapName: OpenDataMap
+
+  OpenDataIdentityPool:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      AllowUnauthenticatedIdentities: True
+      IdentityPoolName: OpenDataIdentityPool
+
+  OpenDataIdentityPoolRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: Role created for usage with Cognito as part of the demo
+      RoleName:
+        !Join [
+          "-",
+          [
+            !Select [2, !Split ["/", !Ref AWS::StackId]],
+            "OpenDataCognitoUnAuthRole",
+          ],
+        ]
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Federated: "cognito-identity.amazonaws.com"
+            Action:
+              - "sts:AssumeRoleWithWebIdentity"
+            Condition:
+              StringEquals:
+                "cognito-identity.amazonaws.com:aud": !Ref OpenDataIdentityPool
+              "ForAnyValue:StringLike":
+                "cognito-identity.amazonaws.com:amr": unauthenticated
+      Policies:
+        - PolicyName: OpenDataUnAuthPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "geo:GetMap*"
+                Resource: !GetAtt OpenDataMap.Arn
+
+  OpenDataIdentityPoolRoleMapping:
+    Type: AWS::Cognito::IdentityPoolRoleAttachment
+    Properties:
+      IdentityPoolId: !Ref OpenDataIdentityPool
+      Roles:
+        unauthenticated: !GetAtt OpenDataIdentityPoolRole.Arn
+
+Outputs:
+  IdentityPoolId:
+    Description: The Cognito Pool ID for use in the demo
+    Value: !Ref OpenDataIdentityPool
