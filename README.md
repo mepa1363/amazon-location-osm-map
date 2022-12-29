@@ -8,7 +8,7 @@ To run this project, you will need access to an AWS account with sufficient perm
 
 ## Create AWS resources
 
-Click the CloudFormation launch stack button to create the necessary AWS resources for this project. The resource include an Amazon Location Service’s map resource, an Amazon Cognito Identity Pool, plus an IAM role and policy.
+Click the CloudFormation launch stack button to create the necessary AWS resources for this project. The resources include an Amazon Location Service’s map resource, an Amazon Cognito Identity Pool, plus an IAM role and policy.
 
 [![Launch Stack](./cloudformation/launch-stack.svg)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/quickcreate?stackName=open-data-maps-demo&templateURL=https://amazon-location-blog-assets.s3.us-west-2.amazonaws.com/amazon-location-open-data-launch/template.yml)
 
@@ -26,4 +26,4 @@ Open `index.html` in your browser.
 
 To remove the AWS resources created in this project, delete the CloudFormation stack called `open-data-maps-demo`.
 
-Read more about this project [here]().
+To learn more about this project, read [this blog post](https://dev.to/mepa1363/build-interactive-maps-with-openstreetmap-data-on-aws-1ddl).
